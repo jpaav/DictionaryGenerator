@@ -15,13 +15,22 @@
 #include <boost/serialization/version.hpp>
 #include <boost/serialization/split_member.hpp>
 
-BOOST_CLASS_VERSION(Target, 0)
+//BOOST_CLASS_VERSION(Target, 0)
 
-void save_schedule(Target &t, std::string filename){
+void save_profile(Target &t, std::string filename){
     // make an archive
-    //std::ofstream ofs(filename.c_str());
-    boost::archive::text_oarchive oa(std::cout);
+    std::ofstream ofs(filename.c_str());
+    boost::archive::text_oarchive oa(ofs);
     oa << t;
+    std::cout << "Profile saved at " << filename << std::endl;
+}
+
+void load_profile(Target &t, std::string filename)
+{
+	std::ifstream ifs(filename.c_str());
+	boost::archive::text_iarchive ia(ifs);
+	ia >> t;
+	std::cout << "Profile loaded from " << filename << std::endl;
 }
 
 int main(int argc, char const *argv[])
@@ -35,22 +44,25 @@ int main(int argc, char const *argv[])
 	std::string profilePath (argv[1]);
 	std::ifstream f;
 	Target profile;
+	bool quit = false;
 	
 	f.open(profilePath.c_str(), std::ios::binary);
 	f.seekg(0, std::ios::end);
 	int length = f.tellg();
+	f.close();
 	if (length != 0)
 	{
-		profile.parseFile();
+		load_profile(profile, profilePath);
+		std::cout << "TestVal: " << profile.getTestVal() << std::endl;
 	}
-	while(1)
+	while(!quit)
 	{
-		std::cout << "\n______________\n\nTo edit or add to profile data, press \"e\"\nTo generate a wordlist from this profile, press \"g\"\nTo quit, press \"q\"\n";
+		//std::cout << "\n______________\n\nTo edit or add to profile data, press \"e\"\nTo generate a wordlist from this profile, press \"g\"\nTo quit, press \"q\"\n";
 		char input = getchar();
 		if (input == 'e')
 		{
 			profile.enterData();
-			save_schedule(profile, profilePath);
+			save_profile(profile, profilePath);
 		}
 		else if(input == 'g')
 		{
@@ -58,12 +70,12 @@ int main(int argc, char const *argv[])
 		}
 		else if(input == 'q')
 		{
-			return 0;
+			quit = true;
 		}
-		else
+		/*else
 		{
 			std::cout << "That wasn't one of your choices... try again?\n";
-		}
+		}*/
 	}
 
 }

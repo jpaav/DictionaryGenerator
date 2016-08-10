@@ -15,6 +15,7 @@ class Target
 private:
 	friend class boost::serialization::access;
 	
+	int testVal;
 	Address home;
 	Address work;
 	//Date_Time birthday;
@@ -29,11 +30,14 @@ private:
 	    //ar & birthday;
 	    ar & name;
 	    ar & pinfo;
+	    ar & testVal;
 	}
 public:
+	Target();
 	void generateList();
 	void enterData();
 	void parseFile();
+	int getTestVal() { return testVal; }
 };
 
 #endif

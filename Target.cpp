@@ -4,6 +4,7 @@
 #include <boost/serialization/version.hpp>
 #include <boost/serialization/split_member.hpp>
 
+
 void Target::parseFile()
 {
 
@@ -16,6 +17,11 @@ void Target::generateList()
 
 void Target::enterData()
 {
+	testVal = 1;
+}
 
+Target::Target()
+{
+	testVal = 0;
 }
 
